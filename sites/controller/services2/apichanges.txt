@@ -1,0 +1,51 @@
+
+Services
+
+https://www.geeksforgeeks.org/how-to-open-popup-using-angular-and-bootstrap/#:~:text=Just%20write%20the%20following%20command,bootstrap%20into%20your%20node_modules%20folder.&text=Approach%3A%20Import%20NgbModal%20module%20in,file%20of%20the%20corresponding%20component.
+
+
+
+1.  https://demo.noteactive.com/index.php?route=services/appservices/jsonUsers
+2.  http://localhost/demobuild317/index.php?route=services2/clientintake/jsoninfo
+3.  http://localhost/demobuild317/index.php?route=services2/clientintake/editClient
+
+	 Changes in Gender
+	 Chanegs in Status Update query 
+	 
+	 $this->db->query("UPDATE `" . DB_PREFIX . "tags` SET classification_id = '" . $this->db->escape($data['tag_classification_id']) . "' WHERE tags_id = '" . $this->db->escape($tags_id) . "'");
+	 
+	 $sql1 = "UPDATE `" . DB_PREFIX . "tags` SET customlistvalues_id = '" . $this->db->escape($data['gender']) . "', gender = '" . $this->db->escape($data['gender']) . "'  WHERE tags_id = '" . (int)$tags_id . "'";
+	 
+4. getUserroles() {
+        this.loading = true;
+            const body = new HttpParams()
+            .set('facilities_id', '47');   
+
+Static data need to fix..
+
+5. http://localhost/demobuild317/index.php?route=services2/resident/jsonAddSticky
+	GetSticky 	 and UpdateSticky
+	 
+6. Default Facility Id : services2/apptask/jsonTasklist ---  localStorage.getItem('default_facilities_id')
+
+
+7. New Finction created : http://localhost/demo-build-v526/index.php?route=services2/apptask/tagmedication
+
+
+8. http://localhost/demo-build-v526/index.php?route=services2/apptask/jsonTaskData
+
+	i.) bedchecktaskforms
+
+	ii.)  'tags_display' => $tag ['emp_tag_id'] . ': ' . $tag ['emp_first_name'] . ' ' . $tag ['emp_last_name'] 
+	
+	iii.) 
+	
+9. http://localhost/demo-build-v526/index.php?route=services2/apptask/jsonAddTasknote	
+	
+	i. ) 	if ($this->request->post ['recurrence'] == "None" 
+	
+	ii.) 	$jsonData = stripslashes ( html_entity_decode ( $this->request->post ['tags_medication_details_ids'] ) );
+			$tags_medication_details_ids = json_decode ( $jsonData, true );
+			
+			
+	iii.) 

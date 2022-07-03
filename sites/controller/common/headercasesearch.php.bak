@@ -1,0 +1,226 @@
+<?php   
+class Controllercommonheadercasesearch extends Controller {
+	protected function index() {
+		try{
+			
+		$this->load->model('setting/tags');
+		$this->load->model('facilities/facilities');
+		$tags_id = $this->request->get['tags_id'];
+        $tag = $this->model_setting_tags->getTag($tags_id);
+		
+		$this->data['emp_tag_id'] = $tag['emp_tag_id'];
+		$this->data['stickynote'] = $tag['stickynote'];
+		$this->data['tags_id'] = $tag['tags_id'];
+		$this->data['ssn'] = $tag['ssn'];
+		$this->data['prescription'] = $tag['prescription'];
+		$this->data['location_address'] = $tag['location_address'];
+		$this->data['dob'] = $tag['dob'];
+		$this->data['room'] = $tag['room'];
+		
+		$facilitynames = $this->model_facilities_facilities->getfacilities($tag['facilities_id']);
+		$this->data['facilities_id'] = $facilitynames['facility']; 
+			
+		$this->load->model('createtask/createtask');
+        $this->data['tasktypes'] = $this->model_createtask_createtask->getTaskdetails();
+		
+
+		$this->load->model('setting/highlighter');
+        $this->data['highlighters'] = $this->model_setting_highlighter->gethighlighters();
+			
+		$data = array(
+                    'status' => '1',
+                    'facilities_id' => $this->customer->getId()
+            );
+        $this->load->model('user/user');   
+        $this->data['users'] = $this->model_user_user->getUsersByFacility($this->customer->getId());
+		
+		
+		$this->data['tag'] = $tag;
+		
+		$this->data['tagname'] = $tag['emp_first_name'] . ' ' . $tag['emp_last_name'];
+		
+		$url3 = "";
+		$url4 = "";
+
+		$url2 = "";
+		if ($this->request->get['search_time_start'] != null && $this->request->get['search_time_start'] != "") {
+		   $url2 .= '&search_time_start=' . $this->request->get['search_time_start'];
+		   $url3 .= '&search_time_start=' . $this->request->get['search_time_start'];
+		}
+		
+		if ($this->request->get['note_date_from'] != null && $this->request->get['note_date_from'] != "") {
+			$url2 .= '&note_date_from=' . $this->request->get['note_date_from'];
+			$url3 .= '&note_date_from=' . $this->request->get['note_date_from'];
+		}
+		if ($this->request->get['search_time_to'] != null && $this->request->get['search_time_to'] != "") {
+			$url2 .= '&search_time_to=' . $this->request->get['search_time_to'];
+			$url3 .= '&search_time_to=' . $this->request->get['search_time_to'];
+		}
+		if ($this->request->get['note_date_to'] != null && $this->request->get['note_date_to'] != "") {
+			$url2 .= '&note_date_to=' . $this->request->get['note_date_to'];
+			$url3 .= '&note_date_to=' . $this->request->get['note_date_to'];
+		}
+		
+		if ($this->request->get['keyword'] != null && $this->request->get['keyword'] != "") {
+			$url2 .= '&keyword=' . $this->request->get['keyword'];
+			$url3 .= '&keyword=' . $this->request->get['keyword'];
+		}
+		
+		if ($this->request->get['task_type'] != null && $this->request->get['task_type'] != "") {
+			$url2 .= '&task_type=' . $this->request->get['task_type'];
+			$url3 .= '&task_type=' . $this->request->get['task_type'];
+		}
+		
+		
+		if ($this->request->get['highlighter'] != null && $this->request->get['highlighter'] != "") {
+			$url2 .= '&highlighter=' . $this->request->get['highlighter'];
+			$url3 .= '&highlighter=' . $this->request->get['highlighter'];
+		}
+		
+		if ($this->request->get['user_id'] != null && $this->request->get['user_id'] != "") {
+			$url2 .= '&user_id=' . $this->request->get['user_id'];
+			$url3 .= '&user_id=' . $this->request->get['user_id'];
+		}
+
+
+		if ($this->request->get['tags_id'] != null && $this->request->get['tags_id'] != "") {
+			$url2 .= '&tags_id=' . $this->request->get['tags_id'];
+			$url4 .= '&tags_id=' . $this->request->get['tags_id'];
+		}
+		if ($this->request->get['type'] != null && $this->request->get['type'] != "") {
+			$url2 .= '&type=' . $this->request->get['type'];
+			$url3 .= '&type=' . $this->request->get['type'];
+		   $this->data['type'] = $this->request->get['type'];
+		}
+		
+		 $this->data['url3'] = $url3;
+		
+			$url3 = "";
+
+			if (isset($this->request->post['note_date_from'])) {
+				$this->data['note_date_from'] = $this->request->post['note_date_from'];
+				$date = str_replace('-', '/', $this->request->post['note_date_from']);
+				$res = explode("/", $date);
+				$note_date_from = $res[2] . "-" . $res[0] . "-" . $res[1];
+				
+			} else {
+				$this->data['note_date_from'] = '';
+			}
+			
+			if (isset($this->request->post['note_date_to'])) {
+				$this->data['note_date_to'] = $this->request->post['note_date_to'];
+				
+				$date = str_replace('-', '/', $this->request->post['note_date_to']);
+				$res = explode("/", $date);
+				$note_date_to = $res[2] . "-" . $res[0] . "-" . $res[1];
+			} else {
+				$this->data['note_date_to'] = '';
+			}
+			
+			if (isset($this->request->post['search_time_start'])) {
+				$this->data['search_time_start'] = $this->request->post['search_time_start'];
+				$search_time_start = $this->request->post['search_time_start'];
+			} else {
+				$this->data['search_time_start'] = '';
+			}
+			
+			if (isset($this->request->post['search_time_to'])) {
+				$this->data['search_time_to'] = $this->request->post['search_time_to'];
+				$search_time_to = $this->request->post['search_time_to'];
+			} else {
+				$this->data['search_time_to'] = '';
+			}
+			
+			
+			if (isset($this->request->post['user_id'])) {
+				$this->data['user_id'] = $this->request->post['user_id'];
+				$user_id = $this->request->post['user_id'];
+			} else {
+				$this->data['user_id'] = '';
+			}
+		
+		
+
+		//$this->data['href_event'] = $this->url->link('notes/notes/insert', '' . $url2 . '&tags_id=' . $tag['tags_id'], 'SSL');
+		$this->data['href_sticky'] = $this->url->link('resident/resident/getstickynote&close=1', '' . $url2, 'SSL');
+		$this->data['screening_url'] = $this->url->link('resident/resident/getstickynote&close=1', '' . $url2, 'SSL');
+		$this->data['medication_url'] = $this->url->link('resident/resident/tagsmedication', '' . $url2, 'SSL');
+		$this->data['form_url'] = $this->url->link('case/clients/detail&type=2', '' . $url4, 'SSL');
+		$this->data['task_url'] = $this->url->link('case/clients/detail&type=5', '' . $url4, 'SSL');
+		$this->data['add_task'] = $this->url->link('notes/createtask&type=5', '' . $url4, 'SSL');
+		
+		$this->data['note_url'] = $this->url->link('notes/notes/insert', '' . $url2, 'SSL');
+		
+		
+		
+		
+		
+			$this->data['resetUrl'] = $this->url->link('notes/notes/insert', '' . '&reset=1' . $url, 'SSL');
+            
+            $this->data['record_url'] = $this->url->link('notes/recordingnote/recordnote', '' . $url, 'SSL');
+            $this->data['sharenote_url'] = $this->url->link('notes/sharenote/addnote', '' . $url, 'SSL');
+            $this->data['check_list_form_url'] = $this->url->link('notes/createtask/noteschecklistform', '' . $url, 'SSL');
+            $this->data['custom_form_form_url'] = $this->url->link('form/form', '' . $url, 'SSL');
+             $this->data['custom_form_form_url'] = $this->url->link('form/form', '' . $url, 'SSL');
+			$this->data['check_list_form_url'] = $this->url->link('notes/createtask/noteschecklistform', '' . $url, 'SSL');
+			
+			$this->data['customIntake_url'] = $this->url->link('notes/tags/updateclient', '' . $url2, 'SSL');
+			$this->data['censusdetail_url'] = $this->url->link('resident/dailycensus/censusdetail', '' . $url2, 'SSL');
+			
+			$this->data['medication_url'] = $this->url->link('resident/resident/tagsmedication', '' . $url2, 'SSL');
+			$this->data['assignteam_url'] = $this->url->link('resident/assignteam', '' . $url2, 'SSL');
+			
+			$this->data['bedcheck_url'] = $this->url->link('notes/printbedcheck&is_bedchk=1', '' . $url2, 'SSL');
+			
+			$this->data['approval_url'] = $this->url->link('notes/createtask/approvalurl', '' . $url2, 'SSL');
+			
+			$this->data['routemap_url'] = $this->url->link('notes/routemap', '' . $url2, 'SSL');
+			
+			$this->data['discharge_href'] = $this->url->link('notes/case', '' . $url2, 'SSL');
+			
+			
+		
+		
+		$this->data['action'] = $this->url->link('case/clients/detail', '' . $url2, 'SSL');
+		
+		
+		if($this->request->get['type'] == '4'){
+			$this->data['action222'] = str_replace('&amp;', '&', $this->url->link('case/calendar', '' . $url2, 'SSL'));
+		}else{
+			$this->data['action222'] = str_replace('&amp;', '&', $this->url->link('case/clients/detail', '' . $url3, 'SSL'));
+		}
+		
+		
+			
+		$this->template = $this->config->get('config_template') . '/template/common/headercasesearch.php';
+
+			$this->render();
+		
+		}catch(Exception $e){
+			
+			$this->load->model('activity/activity');
+			$activity_data2 = array(
+				'data' => 'Error in Sites Common headercase',
+			);
+			$this->model_activity_activity->addActivity('headercase', $activity_data2);
+		
+		
+		} 
+	}
+
+	protected function validateForm ()
+    {
+        if ($this->request->post['form_key'] != null && $this->request->post['form_key'] != "") {
+            $formkeyerror = $this->formkey->validate($this->request->post['form_key']);
+        }
+       
+        if (! $this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+ 	
+}
+?>
